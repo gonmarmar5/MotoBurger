@@ -1,0 +1,890 @@
+@font-face {
+  font-family: 'Rockwell';
+  src: url('fonts/rockwell-extra-bold.otf') format('opentype');
+  font-weight: 800;
+  font-display: swap;
+}
+
+/* ── Custom Properties & Reset ── */
+:root {
+  --bg: #121212;
+  --bg-card: #1C1D1F;
+  --text: #F2F2F0;
+  --text-muted: #8A8D91;
+  --accent: #FF2A4D;
+  --nav-h: 80px;
+  --border: 1px solid rgba(255, 255, 255, 0.08);
+  --carbon: #1C1D1F;
+  --graphite: #2B2D30;
+  --grey: #8A8D91;
+  --smoke: #F2F2F0;
+  --crimson: #D50E32;
+  --t: 5s;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: clamp(16px, 1vw, 18px);
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.rockwell {
+  font-family: 'Rockwell', serif;
+  font-weight: 800;
+}
+
+/* ── Navbar ── */
+#navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-h);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 clamp(1.5rem, 4vw, 4rem);
+  z-index: 100;
+  background: linear-gradient(to bottom, rgba(18, 18, 18, 0.9), transparent);
+  transition: background 0.3s, backdrop-filter 0.3s;
+}
+
+#navbar.scrolled {
+  background: rgba(18, 18, 18, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: var(--border);
+}
+
+.nav-left,
+.nav-center,
+.nav-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.nav-center {
+  justify-content: center;
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.nav-right {
+  justify-content: flex-end;
+  gap: 1.5rem;
+}
+
+#nav-brand {
+  font-family: 'Rockwell', serif;
+  font-size: clamp(1.2rem, 1.5vw, 1.6rem);
+  color: #ffffff;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+}
+
+.nav-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--text);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+#status-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+#status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+#status-badge.open #status-dot {
+  background: #22c55e;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+#status-badge.open #status-text {
+  color: #22c55e;
+}
+
+#status-badge.closed #status-text {
+  color: var(--text-muted);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+#lang-toggle {
+  background: transparent;
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+#lang-toggle:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+/* ── Hero ── */
+#hero {
+  min-height: 100svh;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background-color: var(--carbon);
+}
+
+#hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(70vw, 720px);
+  height: min(70vw, 720px);
+  border-radius: 50%;
+  background: radial-gradient(rgba(213, 14, 50, .25), transparent 65%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-bg-text {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  opacity: 0.8;
+}
+
+.marquee {
+  width: 100vw;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.marquee-inner {
+  display: inline-block;
+  font-family: 'Rockwell', serif;
+  font-size: clamp(6rem, 15vw, 15rem);
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  color: var(--bg);
+  animation: marquee 20s linear infinite;
+  will-change: transform;
+}
+
+.marquee-reverse .marquee-inner {
+  animation: marquee-rev 25s linear infinite;
+}
+
+.marquee span {
+  padding-right: 4rem;
+}
+
+.marquee span.outline {
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(255, 42, 77, 0.4);
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-rev {
+  0% {
+    transform: translateX(-50%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  pointer-events: none;
+}
+
+#hero-mascot {
+  width: clamp(260px, 34vw, 520px);
+  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.5));
+  position: relative;
+  z-index: 10;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+#hero-mascot #s1-burger,
+#hero-mascot #s2-bocado1,
+#hero-mascot #s3-bocado2,
+#hero-mascot #s4-bocado3,
+#hero-mascot #guino {
+  opacity: 0;
+}
+
+#hero-mascot:not(.is-eating) #s1-burger {
+  opacity: 1;
+}
+
+#hero-mascot.is-eating #s1-burger {
+  animation: anim-s1 var(--t) linear forwards;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+#hero-mascot.is-eating #s2-bocado1 {
+  animation: anim-s2 var(--t) linear forwards;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+#hero-mascot.is-eating #s3-bocado2 {
+  animation: anim-s3 var(--t) linear forwards;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+#hero-mascot.is-eating #s4-bocado3 {
+  animation: anim-s4 var(--t) linear forwards;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+#hero-mascot.is-eating #guino {
+  animation: anim-guino var(--t) linear forwards;
+}
+
+#hero-mascot.is-eating #ojo {
+  animation: anim-ojo var(--t) linear forwards;
+}
+
+#hero-mascot.is-eating #personaje {
+  animation: balanceo var(--t) ease-in-out forwards;
+  transform-origin: 50% 100%;
+}
+
+@keyframes anim-s1 {
+  0% { opacity: 1; transform: scale(0.9); }
+  3% { opacity: 1; transform: scale(1.06); }
+  6% { opacity: 1; transform: scale(1); }
+  11.999% { opacity: 1; }
+  12% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes anim-s2 {
+  0% { opacity: 0; }
+  11.999% { opacity: 0; }
+  12% { opacity: 1; transform: scale(1.03); }
+  15% { opacity: 1; transform: scale(1); }
+  23.999% { opacity: 1; }
+  24% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes anim-s3 {
+  0% { opacity: 0; }
+  23.999% { opacity: 0; }
+  24% { opacity: 1; transform: scale(1.03); }
+  27% { opacity: 1; transform: scale(1); }
+  35.999% { opacity: 1; }
+  36% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes anim-s4 {
+  0% { opacity: 0; }
+  35.999% { opacity: 0; }
+  36% { opacity: 1; transform: scale(1.03); }
+  39% { opacity: 1; transform: scale(1); }
+  53.999% { opacity: 1; }
+  54% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes anim-guino {
+  0% { opacity: 0; }
+  63.999% { opacity: 0; }
+  64% { opacity: 1; }
+  83.999% { opacity: 1; }
+  84% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes anim-ojo {
+  0% { opacity: 1; }
+  63.999% { opacity: 1; }
+  64% { opacity: 0; }
+  83.999% { opacity: 0; }
+  84% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+@keyframes balanceo {
+  0% { transform: rotate(-0.6deg); }
+  50% { transform: rotate(0.6deg); }
+  100% { transform: rotate(-0.6deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #hero-mascot.is-eating #s1-burger,
+  #hero-mascot.is-eating #s2-bocado1,
+  #hero-mascot.is-eating #s3-bocado2,
+  #hero-mascot.is-eating #s4-bocado3,
+  #hero-mascot.is-eating #guino,
+  #hero-mascot.is-eating #ojo,
+  #hero-mascot.is-eating #personaje {
+    animation: none !important;
+  }
+}
+
+.hero-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem clamp(1.5rem, 4vw, 4rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  z-index: 10;
+}
+
+.hero-footer p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.scroll-down {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 1.5rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+/* ── Sections shared ── */
+section {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 5rem);
+}
+
+/* Hero needs full viewport width for the marquee text */
+#hero {
+  max-width: 100%;
+  padding: 0;
+}
+
+.section-title {
+  font-family: 'Rockwell', serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  letter-spacing: -0.02em;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  color: var(--text);
+  border-bottom: var(--border);
+  padding-bottom: 1rem;
+}
+
+/* ── Menu (Cards Grid with Glass Hover/Tap) ── */
+.menu-category-header {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin: 3rem 0 1.5rem;
+}
+
+.menu-category-header:first-child {
+  margin-top: 0;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
+  justify-items: center;
+  /* Centers cards within the grid */
+}
+
+.menu-card {
+  width: 100%;
+  max-width: 400px;
+  /* Cap card width so they don't stretch weirdly */
+  position: relative;
+  background: var(--bg-card);
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 4/5;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+/* Mobile active tap OR PC hover triggers the pop up */
+@media (hover: hover) {
+  .menu-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+  }
+
+  .menu-card:hover .menu-card-img {
+    transform: scale(1.05);
+  }
+}
+
+.menu-card-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Marketing Badge — sits below the title, never overlaps it */
+.menu-card-badge {
+  position: static;
+  display: inline-block;
+  align-self: flex-start;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  z-index: 5;
+  letter-spacing: 0.05em;
+  margin-top: 0.35rem;
+  box-shadow: 0 4px 12px rgba(255, 42, 77, 0.4);
+}
+
+.menu-card-no-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #25272a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  opacity: 0.5;
+}
+
+.menu-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent);
+  pointer-events: none;
+}
+
+.menu-card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
+  z-index: 2;
+  overflow: hidden;
+}
+
+/* Title + badge stacked together at top */
+.menu-card-top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.menu-card-title {
+  font-family: 'Rockwell', serif;
+  font-size: 1.5rem;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.02em;
+}
+
+.menu-card-glass {
+  background: rgba(20, 20, 20, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.25rem;
+  border-radius: 8px;
+  transform: translateY(120%);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
+}
+
+/* Glass pops up on hover (real pointer devices only) OR active class (tap) */
+@media (hover: hover) {
+  .menu-card:hover .menu-card-glass {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.menu-card.active .menu-card-glass {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.menu-card-desc {
+  font-size: 0.85rem;
+  color: #e0e0e0;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+.menu-card-price {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ── Compact Schedule & About ── */
+.info-container {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: clamp(2rem, 4vw, 4rem);
+  background: var(--bg-card);
+  padding: clamp(2.5rem, 5vw, 4rem);
+  border-radius: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Separator: vertical on PC, horizontal on mobile */
+.info-separator {
+  width: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  align-self: stretch;
+}
+
+.subsection-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+/* "HORARIO" title ~2x bigger */
+#schedule .subsection-title {
+  font-family: 'Rockwell', serif;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  letter-spacing: 0.08em;
+}
+
+/* MASSIVE ASYMMETRICAL "NOSOTROS" TITLE */
+#about .subsection-title {
+  font-family: 'Rockwell', serif;
+  font-size: clamp(3.5rem, 6vw, 5rem);
+  color: var(--text);
+  margin-bottom: 1rem;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+/* On PC, separate about text from heading and center it vertically */
+@media (min-width: 901px) {
+  .about-pane {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #about .subsection-title {
+    margin-bottom: 2rem;
+  }
+}
+
+.about-text {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--text-muted);
+  font-weight: 400;
+  white-space: pre-line;
+}
+
+.schedule-compact-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.schedule-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+}
+
+.schedule-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.schedule-row.today {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.schedule-row>span:first-child {
+  flex-shrink: 0;
+  min-width: 5.5rem;
+}
+
+.schedule-hours {
+  color: var(--text-muted);
+  white-space: nowrap;
+  text-align: right;
+}
+
+.schedule-row.today .schedule-hours {
+  color: var(--text);
+}
+
+
+/* ── Footer ── */
+footer {
+  border-top: var(--border);
+  padding: 2rem clamp(1.5rem, 5vw, 5rem);
+  background: #0a0a0a;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.footer-brand {
+  font-family: 'Rockwell', serif;
+  font-size: 1.5rem;
+  color: #fff;
+  letter-spacing: 0.05em;
+}
+
+.footer-details {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.footer-details a {
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.footer-details a:hover {
+  color: var(--accent);
+}
+
+.copyright {
+  opacity: 0.6;
+}
+
+/* ── Mobile Overrides ── */
+@media (max-width: 900px) {
+  .nav-center {
+    display: none;
+  }
+
+  .hero-footer p {
+    display: none;
+  }
+
+  /* On mobile, let brand and status+toggle size to their content
+     so neither gets squeezed into the other */
+  .nav-left,
+  .nav-right {
+    flex: 0 0 auto;
+  }
+
+  #nav-brand {
+    font-size: 1rem;
+  }
+
+  /* slightly smaller so status text fits */
+
+  /* Info section stacks vertically, no overflow */
+  .info-container {
+    grid-template-columns: 1fr;
+    overflow: hidden;
+  }
+
+  .info-separator {
+    width: 100%;
+    height: 1px;
+    align-self: auto;
+  }
+
+  /* Prevent about text from overflowing */
+  .about-pane,
+  .schedule-pane {
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  #about .subsection-title {
+    font-size: clamp(2rem, 10vw, 3.5rem);
+  }
+
+  /* Schedule: let hours wrap if needed */
+  .schedule-hours {
+    white-space: normal;
+    text-align: right;
+  }
+
+  /* Footer */
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .footer-details {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  /* Scroll button shows arrow + MENÚ label */
+  .scroll-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+
+  .scroll-label {
+    display: block;
+  }
+}
+
+/* Desktop: hide MENÚ label, keep only arrow */
+@media (min-width: 901px) {
+  .scroll-label {
+    display: none;
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "timezone": "Europe/Madrid",
+  "days": {
+    "lunes":     { "es": "Lunes",     "en": "Monday",    "lunch": "13:00–15:30", "dinner": "20:00–23:00" },
+    "martes":    { "es": "Martes",    "en": "Tuesday",   "lunch": "13:00–15:30", "dinner": "20:00–23:00" },
+    "miercoles": { "es": "Miércoles", "en": "Wednesday", "lunch": "13:00–15:30", "dinner": "20:00–23:00" },
+    "jueves":    { "es": "Jueves",    "en": "Thursday",  "lunch": "13:00–15:30", "dinner": "20:00–23:00" },
+    "viernes":   { "es": "Viernes",   "en": "Friday",    "lunch": "13:00–15:30", "dinner": "20:00–01:30" },
+    "sabado":    { "es": "Sábado",    "en": "Saturday",  "lunch": "13:00–15:30", "dinner": "20:00–01:30" },
+    "domingo":   { "es": "Domingo",   "en": "Sunday",    "lunch": "11:00–15:30", "dinner": "20:00–23:00" }
+  }
+}
