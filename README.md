@@ -12,7 +12,7 @@
 
 ![Moto Burger Live Demo](demo.png)
 
-[View Live Demo](https://al2002m8.github.io/MotoBurger/)
+[View Live Demo](https://github.com/gonmarmar5/MotoBurger)
 
 ## Getting Started
 
