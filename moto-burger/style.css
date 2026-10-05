@@ -284,6 +284,26 @@ body {
   position: relative;
   z-index: 10;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#now-you-text {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  color: #d50e32;
+  font-family: 'Rockwell', serif;
+  font-size: clamp(3rem, 6vw, 5rem);
+  text-align: center;
+  margin-top: 2rem;
+  font-weight: bold;
+}
+
+#now-you-text.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 #hero-mascot {
@@ -378,8 +398,8 @@ body {
   35.999% { opacity: 0; }
   36% { opacity: 1; transform: scale(1.03); }
   39% { opacity: 1; transform: scale(1); }
-  53.999% { opacity: 1; }
-  54% { opacity: 0; }
+  47.999% { opacity: 1; }
+  48% { opacity: 0; }
   100% { opacity: 0; }
 }
 

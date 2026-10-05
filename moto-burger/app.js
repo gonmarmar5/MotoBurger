@@ -3,12 +3,14 @@ const strings = {
   es: {
     nav_menu: 'Carta', nav_schedule: 'Horario', nav_about: 'Nosotros',
     status_open: 'Abierto', status_closed: 'Cerrado',
-    about_text: '\nSomos Moto Burger.\n\nNacimos de la pasión por las smash burgers de verdad, carne aplastada a fuego vivo, queso bien fundido y sabor sin rodeos.\n\nEncontramos nuestro sitio en el corazón de Sevilla.'
+    about_text: '\nSomos Moto Burger.\n\nNacimos de la pasión por las smash burgers de verdad, carne aplastada a fuego vivo, queso bien fundido y sabor sin rodeos.\n\nEncontramos nuestro sitio en el corazón de Sevilla.',
+    now_you: 'Ahora tú!'
   },
   en: {
     nav_menu: 'Menu', nav_schedule: 'Hours', nav_about: 'About',
     status_open: 'Open', status_closed: 'Closed',
-    about_text: '\nWe are Moto Burger.\n\nBorn from a passion for real smash burgers, meat pressed on high heat, perfectly melted cheese and flavor with no shortcuts.\n\nWe found our home in the heart of Seville.'
+    about_text: '\nWe are Moto Burger.\n\nBorn from a passion for real smash burgers, meat pressed on high heat, perfectly melted cheese and flavor with no shortcuts.\n\nWe found our home in the heart of Seville.',
+    now_you: 'Now you!'
   }
 };
 
@@ -126,25 +128,25 @@ const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 function playSound(type) {
   if (audioCtx.state === 'suspended') audioCtx.resume();
-  
+
   const osc = audioCtx.createOscillator();
   const gainNode = audioCtx.createGain();
-  
+
   osc.connect(gainNode);
   gainNode.connect(audioCtx.destination);
-  
+
   const now = audioCtx.currentTime;
-  
+
   if (type === 'niam') {
     // "ñam" sound
     osc.type = 'triangle';
     osc.frequency.setValueAtTime(150, now);
     osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
-    
+
     gainNode.gain.setValueAtTime(0, now);
-    gainNode.gain.linearRampToValueAtTime(0.3, now + 0.05);
+    gainNode.gain.linearRampToValueAtTime(1.0, now + 0.05);
     gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-    
+
     osc.start(now);
     osc.stop(now + 0.2);
   } else if (type === 'clink') {
@@ -152,13 +154,25 @@ function playSound(type) {
     osc.type = 'sine';
     osc.frequency.setValueAtTime(1200, now);
     osc.frequency.exponentialRampToValueAtTime(2000, now + 0.05);
-    
+
     gainNode.gain.setValueAtTime(0, now);
-    gainNode.gain.linearRampToValueAtTime(0.1, now + 0.01);
+    gainNode.gain.linearRampToValueAtTime(0.03, now + 0.01);
     gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-    
+
     osc.start(now);
     osc.stop(now + 0.4);
+  } else if (type === 'typewriter') {
+    // "typewriter" click
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(600, now);
+    osc.frequency.exponentialRampToValueAtTime(100, now + 0.05);
+
+    gainNode.gain.setValueAtTime(0, now);
+    gainNode.gain.linearRampToValueAtTime(0.05, now + 0.01);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+
+    osc.start(now);
+    osc.stop(now + 0.06);
   }
 }
 
@@ -170,25 +184,59 @@ mascot.addEventListener('click', () => {
   if (isEating) return;
   isEating = true;
   mascot.classList.add('is-eating');
-  
+
   // Sounds scheduling
   const duration = 5000;
-  
+
   // s2-bocado1 12%
   setTimeout(() => playSound('niam'), duration * 0.12);
   // s3-bocado2 24%
   setTimeout(() => playSound('niam'), duration * 0.24);
   // s4-bocado3 36%
   setTimeout(() => playSound('niam'), duration * 0.36);
-  // desaparece (sin bocado) 54%
-  setTimeout(() => playSound('niam'), duration * 0.54);
+  // desaparece (sin bocado) 48% (was 54%)
+  setTimeout(() => playSound('niam'), duration * 0.48);
   // guino 64% (espera de 0.5s en 5s total)
   setTimeout(() => playSound('clink'), duration * 0.64);
-  
+
   // Remove class after animation
   setTimeout(() => {
     mascot.classList.remove('is-eating');
     isEating = false;
+
+    // Show text and scroll to menu
+    const textEl = document.getElementById('now-you-text');
+    if (textEl) {
+      textEl.classList.add('visible');
+
+      const originalText = strings[lang]['now_you'];
+      textEl.textContent = "";
+
+      let charIndex = 0;
+      const typeInterval = setInterval(() => {
+        if (charIndex < originalText.length) {
+          textEl.textContent += originalText[charIndex];
+          if (originalText[charIndex] !== ' ') {
+            playSound('typewriter');
+          }
+          charIndex++;
+        } else {
+          clearInterval(typeInterval);
+
+          // Wait a moment before scrolling to the menu
+          setTimeout(() => {
+            const menuSection = document.getElementById('menu');
+            if (menuSection) {
+              menuSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            textEl.classList.remove('visible');
+            setTimeout(() => {
+              textEl.textContent = "";
+            }, 600); // clear after fade out transition completes
+          }, 1000);
+        }
+      }, 100);
+    }
   }, duration);
 });
 
